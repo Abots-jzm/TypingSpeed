@@ -5,6 +5,8 @@ const COPY_TEXT = "The typing speed of an average person is 38 WPM. Are you fast
 const API_URL = "https://type.fit/api/quotes";
 
 const copy = document.querySelector(".copy");
+const firstScreen = document.querySelector(".first-screen");
+const startBtn = document.querySelector(".first-screen .button");
 
 const activeQuotes = [];
 
@@ -46,6 +48,11 @@ typingAnimation();
 function init() {
 	fetchQuotes().catch((e) => console.log(e));
 }
+
+//EVENT LISTENERS
+startBtn.addEventListener("click", function () {
+	firstScreen.classList.add("hidden");
+});
 
 //START
 

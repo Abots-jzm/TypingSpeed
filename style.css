@@ -31,13 +31,20 @@ body {
 .container {
 	max-width: 120rem;
 	margin: 0 auto;
+	padding: 0 1.5rem;
 }
 
 .copy {
 	margin-top: 5vh;
 	width: fit-content;
+	/*animation: blink 0.5s step-end infinite alternate;*/
+	/*border-right: 1px solid white;*/
+}
+
+.copy::after {
+	content: "|";
+	font-weight: 700;
 	animation: blink 0.5s step-end infinite alternate;
-	border-right: 1px solid white;
 }
 
 .button {
@@ -51,7 +58,7 @@ body {
 	cursor: pointer;
 
 	transition: transform 0.2s;
-	animation: buttonAnim 1s 3s;
+	animation: buttonAnim 1s 2.5s;
 	animation-fill-mode: backwards;
 }
 
@@ -67,8 +74,12 @@ body {
 
 /*ANIMATIONS*/
 @keyframes blink {
+	from,
+	to {
+		color: transparent;
+	}
 	50% {
-		border-color: transparent;
+		color: currentColor;
 	}
 }
 
@@ -81,4 +92,8 @@ body {
 		opacity: 1;
 		transform: translateY(0);
 	}
+}
+
+.hidden {
+	display: none !important;
 }

@@ -1,24 +1,47 @@
 "use strict";
 
 const MINIMUM_NO_OF_WORDS = 110;
+const COPY_TEXT = "The typing speed of an average person is 38 WPM. Are you faster than your friends? Settle the debate in just 30 seconds!";
+const API_URL = "https://type.fit/api/quotes";
+
+const copy = document.querySelector(".copy");
 
 const activeQuotes = [];
 
+let typingAnimationCounter = 0;
+
 async function fetchQuotes() {
 	try {
-		const response = await fetch("https://type.fit/api/quotes");
+		const response = await fetch(API_URL);
 		if (!response?.ok) throw new Error("unable to fetch data.");
 		const data = await response.json();
 
-		const noOfQuotes = data.length;
-		const noOfWords = 0;
+		let noOfQuotes = data.length;
+		let noOfWords = 0;
 		while (noOfWords < MINIMUM_NO_OF_WORDS) {
-			const rand = Math.floor(Math.random() * noOfQuotes) + 1;
+			const quote = data[Math.floor(Math.random() * noOfQuotes) + 1].text;
+
+			if (activeQuotes.includes(quote)) continue;
+
+			activeQuotes.push(quote);
+			noOfWords += quote.split(" ").length;
+			noOfQuotes--;
 		}
+		console.log(activeQuotes);
 	} catch (e) {
 		throw e;
 	}
 }
+
+function typingAnimation() {
+	if (typingAnimationCounter < COPY_TEXT.length) {
+		copy.innerHTML += COPY_TEXT.charAt(typingAnimationCounter);
+		typingAnimationCounter++;
+		setTimeout(typingAnimation, 20);
+	}
+}
+
+typingAnimation();
 
 function init() {
 	fetchQuotes().catch((e) => console.log(e));
@@ -26,4 +49,4 @@ function init() {
 
 //START
 
-init();
+// init();

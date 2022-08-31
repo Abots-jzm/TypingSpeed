@@ -11,6 +11,10 @@ img {
 	width: 100%;
 }
 
+b {
+	font-weight: 700;
+}
+
 html {
 	box-sizing: border-box;
 	font-size: 62.5%;
@@ -18,4 +22,63 @@ html {
 }
 
 body {
+	background-color: #333;
+	color: #ddd;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 1.6rem;
+}
+
+.container {
+	max-width: 120rem;
+	margin: 0 auto;
+}
+
+.copy {
+	margin-top: 5vh;
+	width: fit-content;
+	animation: blink 0.5s step-end infinite alternate;
+	border-right: 1px solid white;
+}
+
+.button {
+	border: 1px solid #777;
+	margin-top: 2rem;
+	display: flex;
+	width: fit-content;
+	align-items: center;
+	gap: 1rem;
+	padding: 1rem;
+	cursor: pointer;
+
+	transition: transform 0.2s;
+	animation: buttonAnim 1s 3s;
+	animation-fill-mode: backwards;
+}
+
+.button:hover {
+	transform: scale(1.03);
+}
+
+@media only screen and (max-width: 600px) {
+	.button {
+		cursor: none;
+	}
+}
+
+/*ANIMATIONS*/
+@keyframes blink {
+	50% {
+		border-color: transparent;
+	}
+}
+
+@keyframes buttonAnim {
+	from {
+		opacity: 0;
+		transform: translateY(2rem);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }

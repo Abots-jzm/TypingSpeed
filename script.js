@@ -3,6 +3,7 @@
 const MINIMUM_NO_OF_WORDS = 110;
 const COPY_TEXT = "The typing speed of an average person is 38 WPM. Are you faster than your friends? Settle the debate in just 30 seconds!";
 const API_URL = "https://type.fit/api/quotes";
+const CURSOR_HTML = `<div class="cursor">|</div>`;
 
 const copy = document.querySelector(".copy");
 const firstScreen = document.querySelector(".first-screen");
@@ -70,16 +71,16 @@ function displayQuotes() {
 }
 
 function validateInput(e) {
-	// [...(e.target.value + "      ")].forEach((v, i) => {
-	// 	const letterElement = document.querySelector(`.quotes-box :nth-child(${i + 1})`);
-	// 	if (v === quoteText[i]) {
-	// 		letterElement.className = "letter correct";
-	// 	} else {
-	// 		letterElement.className = "letter wrong";
-	// 	}
-	// });
 	[...quoteText].forEach((v, i) => {
 		const letterElement = document.querySelector(`.quotes-box :nth-child(${i + 1})`);
+
+		if (letterElement.innerHTML.endsWith(CURSOR_HTML)) {
+			letterElement.innerHTML = letterElement.firstChild.nodeValue;
+		}
+		if (i === e.target.value.length - 1) {
+			letterElement.insertAdjacentHTML("beforeend", CURSOR_HTML);
+		}
+
 		if (!e.target.value[i]) {
 			letterElement.className = "letter";
 		} else if (v === e.target.value[i]) {
@@ -88,9 +89,6 @@ function validateInput(e) {
 			letterElement.className = "letter wrong";
 		}
 	});
-
-	// if (quoteText.startsWith(e.target.value)) console.log("yes");
-	// else console.log("no");
 }
 
 typingAnimation();

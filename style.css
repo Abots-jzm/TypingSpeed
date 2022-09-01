@@ -76,6 +76,10 @@ body {
 	padding-top: 20vh;
 }
 
+.letter {
+	position: relative;
+}
+
 .letter.correct {
 	color: #ddd;
 }
@@ -83,6 +87,20 @@ body {
 .letter.wrong {
 	background-color: #ff3131;
 	color: #dddddd;
+}
+
+.cursor {
+	font-size: 3.2rem;
+	font-weight: 300;
+	position: absolute;
+	right: -0.5ch;
+	top: 0;
+	bottom: 0;
+	display: flex;
+	align-items: center;
+	z-index: 100;
+
+	animation: blink 0.5s step-end infinite alternate;
 }
 
 /*TODO: UNCOMMENT*/
@@ -103,10 +121,10 @@ body {
 @keyframes blink {
 	from,
 	to {
-		color: transparent;
+		color: #dddddd;
 	}
 	50% {
-		color: currentColor;
+		color: transparent;
 	}
 }
 

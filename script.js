@@ -7,6 +7,10 @@ const API_URL = "https://type.fit/api/quotes";
 const copy = document.querySelector(".copy");
 const firstScreen = document.querySelector(".first-screen");
 const startBtn = document.querySelector(".first-screen .button");
+const mainScreen = document.querySelector(".test-screen");
+const quotesBox = document.querySelector(".quotes-box");
+const inputField = document.querySelector(".hidden-input input");
+const spinner1 = document.querySelector(".test-screen .loading-spinner");
 
 const activeQuotes = [];
 
@@ -29,9 +33,11 @@ async function fetchQuotes() {
 			noOfWords += quote.split(" ").length;
 			noOfQuotes--;
 		}
-		console.log(activeQuotes);
+		displayQuotes();
 	} catch (e) {
 		throw e;
+	} finally {
+		spinner1.classList.add("hidden");
 	}
 }
 
@@ -43,15 +49,32 @@ function typingAnimation() {
 	}
 }
 
+function triggerInputField() {
+	inputField.focus();
+}
+
+function displayQuotes() {
+	activeQuotes.forEach((v) => (quotesBox.textContent += " " + v));
+}
+
 typingAnimation();
+triggerInputField();
 
 function init() {
+	typingAnimation();
 	fetchQuotes().catch((e) => console.log(e));
 }
 
 //EVENT LISTENERS
 startBtn.addEventListener("click", function () {
 	firstScreen.classList.add("hidden");
+	mainScreen.classList.remove("hidden");
+	triggerInputField();
+});
+
+inputField.addEventListener("input", function (e) {
+	if (quotesBox.textContent.startsWith(e.target.value)) console.log("yes");
+	else console.log("no");
 });
 
 //START

@@ -31,11 +31,10 @@ body {
 .container {
 	max-width: 120rem;
 	margin: 0 auto;
-	padding: 0 1.5rem;
+	padding: 5vh 1.5rem;
 }
 
 .copy {
-	margin-top: 5vh;
 	width: fit-content;
 	/*animation: blink 0.5s step-end infinite alternate;*/
 	/*border-right: 1px solid white;*/
@@ -72,6 +71,24 @@ body {
 	}
 }
 
+.test-screen {
+	position: relative;
+	padding-top: 20vh;
+}
+
+/*TODO: UNCOMMENT*/
+.quotes-box {
+	height: 20rem;
+	/*overflow: hidden;*/
+	background-color: red;
+	font-size: 2.4rem;
+	line-height: 2;
+}
+
+.hidden-input {
+	/*opacity: 0;*/
+}
+
 /*ANIMATIONS*/
 @keyframes blink {
 	from,
@@ -91,6 +108,86 @@ body {
 	to {
 		opacity: 1;
 		transform: translateY(0);
+	}
+}
+
+/*LOADING SPINNER*/
+.test-screen .loading-spinner {
+	position: absolute;
+	top: 20vh;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+}
+
+.loading-spinner {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.lds-ellipsis {
+	display: inline-block;
+	position: relative;
+	width: 80px;
+	height: 80px;
+}
+
+.lds-ellipsis div {
+	position: absolute;
+	top: 33px;
+	width: 13px;
+	height: 13px;
+	border-radius: 50%;
+	background: currentColor;
+	animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.lds-ellipsis div:nth-child(1) {
+	left: 8px;
+	animation: lds-ellipsis1 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(2) {
+	left: 8px;
+	animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(3) {
+	left: 32px;
+	animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(4) {
+	left: 56px;
+	animation: lds-ellipsis3 0.6s infinite;
+}
+
+@keyframes lds-ellipsis1 {
+	0% {
+		transform: scale(0);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes lds-ellipsis3 {
+	0% {
+		transform: scale(1);
+	}
+	100% {
+		transform: scale(0);
+	}
+}
+
+@keyframes lds-ellipsis2 {
+	0% {
+		transform: translate(0, 0);
+	}
+	100% {
+		transform: translate(24px, 0);
 	}
 }
 

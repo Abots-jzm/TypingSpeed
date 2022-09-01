@@ -76,6 +76,13 @@ body {
 	padding-top: 20vh;
 }
 
+.word {
+	display: inline-flex;
+	align-items: center;
+	flex-wrap: nowrap;
+	/*margin-bottom: 2rem;*/
+}
+
 .letter {
 	position: relative;
 }

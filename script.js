@@ -3,7 +3,7 @@
 const MINIMUM_NO_OF_WORDS = 110;
 const COPY_TEXT = "The typing speed of an average person is 38 WPM. Are you faster than your friends? Settle the debate in just 30 seconds!";
 const API_URL = "https://type.fit/api/quotes";
-const CURSOR_HTML = `<div class="cursor">|</div>`;
+const CURSOR_HTML = `<span class="cursor">|</span>`;
 
 const copy = document.querySelector(".copy");
 const firstScreen = document.querySelector(".first-screen");
@@ -16,7 +16,8 @@ const spinner1 = document.querySelector(".test-screen .loading-spinner");
 const activeQuotes = [];
 
 let quoteText =
-	"We see things not as they are, but as we are. Our perception is shaped by our previous experiences. To dream of the person you would like to be is to waste the person you are. Learn all you can from the mistakes of others. You won't have time to make them all yourself. We must become the change we want to";
+	"Kindness is the greatest wisdom. You are never given a wish without also being given the power to make it come true. You may have to work for it, however. The two most powerful warriors are" +
+	" patience and time. Most";
 let typingAnimationCounter = 0;
 
 async function fetchQuotes() {
@@ -61,33 +62,54 @@ function displayQuotes() {
 	let finalHTML = "";
 	activeQuotes.forEach((quote) => {
 		let quoteHTML = "";
-		[...quote].forEach((letter) => {
-			quoteHTML += `<span class="letter">${letter}</span>`;
+		quote.split(" ").forEach((word) => {
+			let wordHTML = "";
+			[...word].forEach((letter) => {
+				wordHTML += `<span class="letter">${letter}</span>`;
+			});
+			wordHTML += `<span class="letter">&nbsp;</span>`;
+			quoteHTML += `<span class="word">${wordHTML}</span>`;
 		});
+		// [...quote].forEach((letter) => {
+		// 	quoteHTML += `<span class="letter">${letter}</span>`;
+		// });
 		quoteText += quote + " ";
-		finalHTML += `${quoteHTML}<span class="letter"> </span>`;
+		finalHTML += quoteHTML;
 	});
-	quotesBox.insertAdjacentHTML("afterbegin", finalHTML);
+	console.log(finalHTML);
+	quotesBox.insertAdjacentHTML("beforeend", finalHTML);
 }
 
+//implement my own counter
+
 function validateInput(e) {
-	[...quoteText].forEach((v, i) => {
-		const letterElement = document.querySelector(`.quotes-box :nth-child(${i + 1})`);
+	let i = 0;
+	quoteText.split(" ").forEach((word, wordIndex) => {
+		const input = e.target.value;
 
-		if (letterElement.innerHTML.endsWith(CURSOR_HTML)) {
-			letterElement.innerHTML = letterElement.firstChild.nodeValue;
-		}
-		if (i === e.target.value.length - 1) {
-			letterElement.insertAdjacentHTML("beforeend", CURSOR_HTML);
-		}
+		if (!input) document.querySelector(`.quotes-box :nth-child(1)`).classList.remove("hidden");
+		else document.querySelector(`.quotes-box :nth-child(1)`).classList.add("hidden");
 
-		if (!e.target.value[i]) {
-			letterElement.className = "letter";
-		} else if (v === e.target.value[i]) {
-			letterElement.className = "letter correct";
-		} else {
-			letterElement.className = "letter wrong";
-		}
+		[...word, " "].forEach((letter, letterIndex) => {
+			const letterElement = document.querySelector(`.quotes-box :nth-child(${wordIndex + 2}) :nth-child(${letterIndex + 1})`);
+
+			if (letterElement.innerHTML.endsWith(CURSOR_HTML)) {
+				letterElement.innerHTML = letterElement.firstChild.nodeValue;
+			}
+			if (i === input.length - 1) {
+				letterElement.insertAdjacentHTML("beforeend", CURSOR_HTML);
+			}
+
+			if (!input.split(" ")[wordIndex]?.[letterIndex]) {
+				if (letterElement.textContent !== "|") letterElement.className = "letter";
+			} else if (letter === input.split(" ")[wordIndex]?.[letterIndex]) {
+				letterElement.className = "letter correct";
+			} else {
+				letterElement.className = "letter wrong";
+			}
+
+			i++;
+		});
 	});
 }
 
@@ -109,6 +131,8 @@ startBtn.addEventListener("click", function () {
 quotesBox.addEventListener("click", triggerInputField);
 
 inputField.addEventListener("input", validateInput);
+inputField.addEventListener("blur", () => document.querySelectorAll(".cursor").forEach((v) => v.classList.add("hidden")));
+inputField.addEventListener("focus", () => document.querySelectorAll(".cursor").forEach((v) => v.classList.remove("hidden")));
 
 //START
 

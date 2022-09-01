@@ -14,6 +14,8 @@ const spinner1 = document.querySelector(".test-screen .loading-spinner");
 
 const activeQuotes = [];
 
+let quoteText =
+	"We see things not as they are, but as we are. Our perception is shaped by our previous experiences. To dream of the person you would like to be is to waste the person you are. Learn all you can from the mistakes of others. You won't have time to make them all yourself. We must become the change we want to";
 let typingAnimationCounter = 0;
 
 async function fetchQuotes() {
@@ -25,7 +27,8 @@ async function fetchQuotes() {
 		let noOfQuotes = data.length;
 		let noOfWords = 0;
 		while (noOfWords < MINIMUM_NO_OF_WORDS) {
-			const quote = data[Math.floor(Math.random() * noOfQuotes) + 1].text;
+			const random = Math.floor(Math.random() * noOfQuotes) + 1;
+			const quote = data[random].text;
 
 			if (activeQuotes.includes(quote)) continue;
 
@@ -54,7 +57,40 @@ function triggerInputField() {
 }
 
 function displayQuotes() {
-	activeQuotes.forEach((v) => (quotesBox.textContent += " " + v));
+	let finalHTML = "";
+	activeQuotes.forEach((quote) => {
+		let quoteHTML = "";
+		[...quote].forEach((letter) => {
+			quoteHTML += `<span class="letter">${letter}</span>`;
+		});
+		quoteText += quote + " ";
+		finalHTML += `${quoteHTML}<span class="letter"> </span>`;
+	});
+	quotesBox.insertAdjacentHTML("afterbegin", finalHTML);
+}
+
+function validateInput(e) {
+	// [...(e.target.value + "      ")].forEach((v, i) => {
+	// 	const letterElement = document.querySelector(`.quotes-box :nth-child(${i + 1})`);
+	// 	if (v === quoteText[i]) {
+	// 		letterElement.className = "letter correct";
+	// 	} else {
+	// 		letterElement.className = "letter wrong";
+	// 	}
+	// });
+	[...quoteText].forEach((v, i) => {
+		const letterElement = document.querySelector(`.quotes-box :nth-child(${i + 1})`);
+		if (!e.target.value[i]) {
+			letterElement.className = "letter";
+		} else if (v === e.target.value[i]) {
+			letterElement.className = "letter correct";
+		} else {
+			letterElement.className = "letter wrong";
+		}
+	});
+
+	// if (quoteText.startsWith(e.target.value)) console.log("yes");
+	// else console.log("no");
 }
 
 typingAnimation();
@@ -72,10 +108,9 @@ startBtn.addEventListener("click", function () {
 	triggerInputField();
 });
 
-inputField.addEventListener("input", function (e) {
-	if (quotesBox.textContent.startsWith(e.target.value)) console.log("yes");
-	else console.log("no");
-});
+quotesBox.addEventListener("click", triggerInputField);
+
+inputField.addEventListener("input", validateInput);
 
 //START
 

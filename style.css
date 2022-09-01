@@ -76,11 +76,21 @@ body {
 	padding-top: 20vh;
 }
 
+.letter.correct {
+	color: #ddd;
+}
+
+.letter.wrong {
+	background-color: #ff3131;
+	color: #dddddd;
+}
+
 /*TODO: UNCOMMENT*/
 .quotes-box {
+	color: #777;
 	height: 20rem;
 	/*overflow: hidden;*/
-	background-color: red;
+	border: 1px solid red;
 	font-size: 2.4rem;
 	line-height: 2;
 }

@@ -15,9 +15,7 @@ const spinner1 = document.querySelector(".test-screen .loading-spinner");
 
 const activeQuotes = [];
 
-let quoteText =
-	"Kindness is the greatest wisdom. You are never given a wish without also being given the power to make it come true. You may have to work for it, however. The two most powerful warriors are" +
-	" patience and time. Most";
+let quoteText = "";
 let typingAnimationCounter = 0;
 
 async function fetchQuotes() {
@@ -70,17 +68,17 @@ function displayQuotes() {
 			wordHTML += `<span class="letter">&nbsp;</span>`;
 			quoteHTML += `<span class="word">${wordHTML}</span>`;
 		});
-		// [...quote].forEach((letter) => {
-		// 	quoteHTML += `<span class="letter">${letter}</span>`;
-		// });
 		quoteText += quote + " ";
 		finalHTML += quoteHTML;
 	});
-	console.log(finalHTML);
 	quotesBox.insertAdjacentHTML("beforeend", finalHTML);
 }
 
-//implement my own counter
+function checkForScroll(cursor) {
+	const cursorCoords = cursor.getBoundingClientRect();
+	const quotesCoords = quotesBox.getBoundingClientRect();
+	if (cursorCoords.y > quotesCoords.y + quotesCoords.height / 2) quotesBox.scrollTop += quotesCoords.height / 4;
+}
 
 function validateInput(e) {
 	let i = 0;
@@ -91,30 +89,28 @@ function validateInput(e) {
 		else document.querySelector(`.quotes-box :nth-child(1)`).classList.add("hidden");
 
 		[...word, " "].forEach((letter, letterIndex) => {
-			const letterElement = document.querySelector(`.quotes-box :nth-child(${wordIndex + 2}) :nth-child(${letterIndex + 1})`);
+			const letterElement = document.querySelector(`.quotes-box :nth-child(${wordIndex + 2}) .letter:nth-of-type(${letterIndex + 1})`);
 
-			if (letterElement.innerHTML.endsWith(CURSOR_HTML)) {
+			if (letterElement?.innerHTML.endsWith(CURSOR_HTML)) {
 				letterElement.innerHTML = letterElement.firstChild.nodeValue;
 			}
 			if (i === input.length - 1) {
 				letterElement.insertAdjacentHTML("beforeend", CURSOR_HTML);
+				checkForScroll(document.querySelectorAll(".cursor")[1]);
 			}
 
-			if (!input.split(" ")[wordIndex]?.[letterIndex]) {
-				if (letterElement.textContent !== "|") letterElement.className = "letter";
-			} else if (letter === input.split(" ")[wordIndex]?.[letterIndex]) {
+			if (!input[i] && letterElement) {
+				letterElement.className = "letter";
+			} else if (letter === input[i] && letterElement) {
 				letterElement.className = "letter correct";
 			} else {
-				letterElement.className = "letter wrong";
+				if (letterElement) letterElement.className = "letter wrong";
 			}
 
 			i++;
 		});
 	});
 }
-
-typingAnimation();
-triggerInputField();
 
 function init() {
 	typingAnimation();
@@ -133,7 +129,8 @@ quotesBox.addEventListener("click", triggerInputField);
 inputField.addEventListener("input", validateInput);
 inputField.addEventListener("blur", () => document.querySelectorAll(".cursor").forEach((v) => v.classList.add("hidden")));
 inputField.addEventListener("focus", () => document.querySelectorAll(".cursor").forEach((v) => v.classList.remove("hidden")));
+inputField.addEventListener("keydown", (e) => e.key.startsWith("Arrow") && e.preventDefault());
 
 //START
 
-// init();
+init();

@@ -53,7 +53,9 @@ body {
 	gap: 1rem;
 	padding: 1rem;
 	cursor: pointer;
+}
 
+.first-screen .button {
 	transition: transform 0.2s;
 	animation: buttonAnim 1s 2.5s;
 	animation-fill-mode: backwards;
@@ -63,15 +65,19 @@ body {
 	transform: scale(1.03);
 }
 
-@media only screen and (max-width: 600px) {
-	.button {
-		cursor: none;
-	}
-}
-
 .test-screen {
 	position: relative;
-	padding-top: 20vh;
+	padding-top: 10vh;
+}
+
+.countdown {
+	font-size: 4.8rem;
+	text-align: center;
+	margin-bottom: 5rem;
+}
+
+.countdown.started {
+	color: #ff3131;
 }
 
 .word {
@@ -108,7 +114,6 @@ body {
 	animation: blink 0.5s step-end infinite alternate;
 }
 
-/*TODO: UNCOMMENT*/
 .quotes-box {
 	color: #777;
 	height: 20rem;
@@ -120,6 +125,34 @@ body {
 	position: fixed;
 	top: -100%;
 	opacity: 0;
+}
+
+.results {
+	display: grid;
+	align-items: center;
+	justify-items: center;
+	row-gap: 2rem;
+	column-gap: 0;
+	grid-template-columns: 1fr 1fr;
+	font-size: 3.2rem;
+}
+
+.result {
+	font-size: 10.4rem;
+}
+
+.result span {
+	font-size: 2.4rem;
+	color: #777777;
+	font-weight: 700;
+}
+
+.label {
+	color: #777777;
+}
+
+.restart {
+	margin: 5vh auto 0;
 }
 
 /*ANIMATIONS*/
@@ -226,4 +259,18 @@ body {
 
 .hidden {
 	display: none !important;
+}
+
+@media only screen and (max-width: 600px) {
+	.result {
+		font-size: 7.2rem;
+	}
+
+	.result span {
+		font-size: 1.6rem;
+	}
+
+	.label {
+		font-size: 2.4rem;
+	}
 }

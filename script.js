@@ -11,7 +11,7 @@ const startBtn = document.querySelector(".first-screen .button");
 const mainScreen = document.querySelector(".test-screen");
 const quotesBox = document.querySelector(".quotes-box");
 const inputField = document.querySelector(".hidden-input input");
-const spinner1 = document.querySelector(".test-screen .loading-spinner");
+const spinner = document.querySelector(".test-screen .loading-spinner");
 const countdownTimer = document.querySelector(".countdown");
 const speedDisplay = document.querySelector(".speed");
 const accuracyDisplay = document.querySelector(".accuracy");
@@ -37,8 +37,6 @@ async function fetchQuotes() {
 		setActiveQuotes(data);
 	} catch (e) {
 		throw e;
-	} finally {
-		spinner1.classList.add("hidden");
 	}
 }
 
@@ -68,6 +66,7 @@ function typingAnimation() {
 
 function triggerInputField() {
 	inputField.focus();
+	spinner.classList.add("hidden");
 }
 
 function displayQuotes() {
@@ -95,6 +94,7 @@ function restart() {
 	quoteText = "";
 	countdownStarted = false;
 	time = 30;
+	spinner.classList.add("hidden");
 	clearInterval(timer);
 	countdownTimer.textContent = "30";
 	countdownTimer.classList.remove("started");

@@ -191,9 +191,9 @@ function init() {
 
 //EVENT LISTENERS
 startBtn.addEventListener("click", function () {
-	triggerInputField();
 	firstScreen.classList.add("hidden");
 	mainScreen.classList.remove("hidden");
+	triggerInputField();
 });
 
 quotesBox.addEventListener("click", triggerInputField);

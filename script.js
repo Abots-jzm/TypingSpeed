@@ -27,7 +27,7 @@ let timer;
 let time = 30;
 let countdownStarted = false;
 let typingAnimationCounter = 0;
-let inputLength = 0;
+let previousInput = "";
 
 async function fetchQuotes() {
 	try {
@@ -92,7 +92,7 @@ function displayQuotes() {
 
 function restart() {
 	inputField.value = "";
-	inputLength = 0;
+	previousInput = "";
 	inputField.focus();
 	activeQuotes = [];
 	quoteText = "";
@@ -133,7 +133,8 @@ function calculateFinalSpeed() {
 
 	[...input].forEach((v, i) => v === expected[i] && correct++);
 	const speed = ((correct / 5) * 2).toFixed(0);
-	const accuracy = ((correct / total) * 100).toFixed(0);
+	let accuracy = ((correct / total) * 100).toFixed(0) || 0;
+	if (isNaN(accuracy)) accuracy = 0;
 
 	displayScores(speed, accuracy);
 }
@@ -165,34 +166,42 @@ function validateInput(e) {
 	const i = input.length - 1;
 	const letterElement = document.getElementById(i.toString());
 
-	if (input.length < inputLength) {
-		document.getElementById((i + 1).toString()).className = "letter";
-		inputLength = input.length;
-		const previousElement = document.getElementById((i + 1).toString());
-		previousElement.innerHTML = previousElement.firstChild.nodeValue;
-		letterElement.insertAdjacentHTML("beforeend", CURSOR_HTML);
-		checkForScroll(document.querySelectorAll(".cursor")[1]);
+	if (input.length < previousInput.length) {
+		[...previousInput].forEach((letter, index) => {
+			if (letter !== input[index]) {
+				const element = document.getElementById(index.toString());
+				element.className = "letter";
+
+				if (element.innerHTML.endsWith(CURSOR_HTML)) element.innerHTML = element.firstChild.nodeValue;
+			}
+		});
+		previousInput = input;
+		if (letterElement) letterElement.insertAdjacentHTML("beforeend", CURSOR_HTML);
 		return;
 	}
 
-	inputLength = input.length;
+	[...input].forEach((letter, index) => {
+		const element = document.getElementById(index.toString());
 
-	if (letterElement.innerHTML === "&nbsp;") {
-		if (input[i] === " ") {
-			letterElement.classList.add("correct");
-		} else {
-			letterElement.classList.add("wrong");
+		if (letter !== previousInput[index]) {
+			if (element.firstChild.nodeValue === "\u00a0") {
+				if (letter === " ") {
+					element.className = "letter correct";
+				} else {
+					element.className = "letter wrong";
+				}
+			} else if (element.firstChild.nodeValue === letter) {
+				element.className = "letter correct";
+			} else {
+				element.className = "letter wrong";
+			}
 		}
-	} else if (letterElement.textContent === input[i]) {
-		letterElement.classList.add("correct");
-	} else {
-		letterElement.classList.add("wrong");
-	}
+		if (element.innerHTML.endsWith(CURSOR_HTML)) element.innerHTML = element.firstChild.nodeValue;
+	});
 
-	const previousElement = document.getElementById((i - 1).toString());
-	if (previousElement) previousElement.innerHTML = previousElement.firstChild.nodeValue;
 	letterElement.insertAdjacentHTML("beforeend", CURSOR_HTML);
 	checkForScroll(document.querySelectorAll(".cursor")[1]);
+	previousInput = input;
 }
 
 function init() {

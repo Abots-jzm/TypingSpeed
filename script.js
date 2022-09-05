@@ -158,13 +158,13 @@ function countdown() {
 function validateInput(e) {
 	if (!countdownStarted) countdown();
 
-	const input = e.target.value;
+	let input = e.target.value;
 
 	if (!input) document.querySelector(`.quotes-box :nth-child(1)`).classList.remove("hidden");
 	else document.querySelector(`.quotes-box :nth-child(1)`).classList.add("hidden");
 
-	const i = input.length - 1;
-	const letterElement = document.getElementById(i.toString());
+	let i = input.length - 1;
+	let letterElement = document.getElementById(i.toString());
 
 	if (input.length < previousInput.length) {
 		[...previousInput].forEach((letter, index) => {
@@ -180,25 +180,24 @@ function validateInput(e) {
 		return;
 	}
 
-	[...input].forEach((letter, index) => {
-		const element = document.getElementById(index.toString());
+	e.target.value = input = input.slice(0, previousInput.length + 1);
+	i = input.length - 1;
+	letterElement = document.getElementById(i.toString());
 
-		if (letter !== previousInput[index]) {
-			if (element.firstChild.nodeValue === "\u00a0") {
-				if (letter === " ") {
-					element.className = "letter correct";
-				} else {
-					element.className = "letter wrong";
-				}
-			} else if (element.firstChild.nodeValue === letter) {
-				element.className = "letter correct";
-			} else {
-				element.className = "letter wrong";
-			}
+	if (letterElement.innerHTML === "&nbsp;") {
+		if (input[i] === " ") {
+			letterElement.classList.add("correct");
+		} else {
+			letterElement.classList.add("wrong");
 		}
-		if (element.innerHTML.endsWith(CURSOR_HTML)) element.innerHTML = element.firstChild.nodeValue;
-	});
+	} else if (letterElement.textContent === input[i]) {
+		letterElement.classList.add("correct");
+	} else {
+		letterElement.classList.add("wrong");
+	}
 
+	const previousElement = document.getElementById((i - 1).toString());
+	if (previousElement) previousElement.innerHTML = previousElement.firstChild.nodeValue;
 	letterElement.insertAdjacentHTML("beforeend", CURSOR_HTML);
 	checkForScroll(document.querySelectorAll(".cursor")[1]);
 	previousInput = input;

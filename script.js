@@ -27,6 +27,7 @@ let timer;
 let time = 30;
 let countdownStarted = false;
 let typingAnimationCounter = 0;
+let inputLength = 0;
 
 async function fetchQuotes() {
 	try {
@@ -66,20 +67,21 @@ function typingAnimation() {
 
 function triggerInputField() {
 	inputField.focus();
-	inputField.click();
 	spinner.classList.add("hidden");
 }
 
 function displayQuotes() {
 	let finalHTML = "";
+	let i = 0;
 	activeQuotes.forEach((quote) => {
 		let quoteHTML = "";
 		quote.split(" ").forEach((word) => {
 			let wordHTML = "";
 			[...word].forEach((letter) => {
-				wordHTML += `<span class="letter">${letter}</span>`;
+				wordHTML += `<span class="letter" id="${i}">${letter}</span>`;
+				i++;
 			});
-			wordHTML += `<span class="letter">&nbsp;</span>`;
+			wordHTML += `<span class="letter" id="${i++}">&nbsp;</span>`;
 			quoteHTML += `<span class="word">${wordHTML}</span>`;
 		});
 		quoteText += quote + " ";
@@ -90,6 +92,7 @@ function displayQuotes() {
 
 function restart() {
 	inputField.value = "";
+	inputLength = 0;
 	inputField.focus();
 	activeQuotes = [];
 	quoteText = "";
@@ -154,35 +157,42 @@ function countdown() {
 function validateInput(e) {
 	if (!countdownStarted) countdown();
 
-	let i = 0;
-	quoteText.split(" ").forEach((word, wordIndex) => {
-		const input = e.target.value;
+	const input = e.target.value;
 
-		if (!input) document.querySelector(`.quotes-box :nth-child(1)`).classList.remove("hidden");
-		else document.querySelector(`.quotes-box :nth-child(1)`).classList.add("hidden");
+	if (!input) document.querySelector(`.quotes-box :nth-child(1)`).classList.remove("hidden");
+	else document.querySelector(`.quotes-box :nth-child(1)`).classList.add("hidden");
 
-		[...word, " "].forEach((letter, letterIndex) => {
-			const letterElement = document.querySelector(`.quotes-box :nth-child(${wordIndex + 2}) .letter:nth-of-type(${letterIndex + 1})`);
+	const i = input.length - 1;
+	const letterElement = document.getElementById(i.toString());
 
-			if (letterElement?.innerHTML.endsWith(CURSOR_HTML)) {
-				letterElement.innerHTML = letterElement.firstChild.nodeValue;
-			}
-			if (i === input.length - 1) {
-				letterElement.insertAdjacentHTML("beforeend", CURSOR_HTML);
-				checkForScroll(document.querySelectorAll(".cursor")[1]);
-			}
+	if (input.length < inputLength) {
+		document.getElementById((i + 1).toString()).className = "letter";
+		inputLength = input.length;
+		const previousElement = document.getElementById((i + 1).toString());
+		previousElement.innerHTML = previousElement.firstChild.nodeValue;
+		letterElement.insertAdjacentHTML("beforeend", CURSOR_HTML);
+		checkForScroll(document.querySelectorAll(".cursor")[1]);
+		return;
+	}
 
-			if (!input[i] && letterElement) {
-				letterElement.className = "letter";
-			} else if (letter === input[i] && letterElement) {
-				letterElement.className = "letter correct";
-			} else {
-				if (letterElement) letterElement.className = "letter wrong";
-			}
+	inputLength = input.length;
 
-			i++;
-		});
-	});
+	if (letterElement.innerHTML === "&nbsp;") {
+		if (input[i] === " ") {
+			letterElement.classList.add("correct");
+		} else {
+			letterElement.classList.add("wrong");
+		}
+	} else if (letterElement.textContent === input[i]) {
+		letterElement.classList.add("correct");
+	} else {
+		letterElement.classList.add("wrong");
+	}
+
+	const previousElement = document.getElementById((i - 1).toString());
+	if (previousElement) previousElement.innerHTML = previousElement.firstChild.nodeValue;
+	letterElement.insertAdjacentHTML("beforeend", CURSOR_HTML);
+	checkForScroll(document.querySelectorAll(".cursor")[1]);
 }
 
 function init() {
@@ -194,6 +204,7 @@ function init() {
 startBtn.addEventListener("click", function () {
 	firstScreen.classList.add("hidden");
 	mainScreen.classList.remove("hidden");
+	inputField.value = "";
 	triggerInputField();
 });
 

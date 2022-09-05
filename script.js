@@ -66,6 +66,7 @@ function typingAnimation() {
 
 function triggerInputField() {
 	inputField.focus();
+	inputField.click();
 	spinner.classList.add("hidden");
 }
 

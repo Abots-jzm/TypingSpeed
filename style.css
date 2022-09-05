@@ -123,9 +123,8 @@ body {
 
 .hidden-input {
 	position: fixed;
-	top: 10vh;
-	/*top: -100%;*/
-	/*opacity: 0;*/
+	top: -100%;
+	opacity: 0;
 }
 
 .results {

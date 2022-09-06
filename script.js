@@ -5,6 +5,7 @@ const COPY_TEXT = "The typing speed of an average person is 38 WPM. Are you fast
 const API_URL = "https://type.fit/api/quotes";
 const CURSOR_HTML = `<span class="cursor">|</span>`;
 
+const themeSwitch = document.querySelector(".theme-toggle");
 const copy = document.querySelector(".copy");
 const firstScreen = document.querySelector(".first-screen");
 const startBtn = document.querySelector(".first-screen .button");
@@ -28,6 +29,18 @@ let time = 30;
 let countdownStarted = false;
 let typingAnimationCounter = 0;
 let previousInput = "";
+
+function switchTheme(init = false) {
+	let theme = localStorage.getItem("theme");
+
+	if (!init) theme = theme === "dark" ? "light" : "dark";
+
+	localStorage.setItem("theme", theme);
+	document.documentElement.className = theme;
+
+	if (theme === "light") themeSwitch.classList.add("right");
+	else themeSwitch.classList.remove("right");
+}
 
 async function fetchQuotes() {
 	try {
@@ -205,6 +218,7 @@ function validateInput(e) {
 
 function init() {
 	typingAnimation();
+	switchTheme(true);
 	fetchQuotes().catch((e) => console.log(e));
 }
 
@@ -225,6 +239,9 @@ inputField.addEventListener("keydown", (e) => e.key.startsWith("Arrow") && e.pre
 
 restartBtn.addEventListener("click", restart);
 
-//START
+themeSwitch.addEventListener("click", function () {
+	switchTheme();
+});
 
+//START
 init();

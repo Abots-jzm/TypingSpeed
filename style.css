@@ -7,12 +7,19 @@
 	font: inherit;
 }
 
-img {
-	width: 100%;
+:root,
+:root.dark {
+	--background-color: #333;
+	--color: #ddd;
 }
 
-b {
-	font-weight: 700;
+:root.light {
+	--background-color: #ddd;
+	--color: #333;
+}
+
+img {
+	width: 100%;
 }
 
 html {
@@ -22,8 +29,8 @@ html {
 }
 
 body {
-	background-color: #333;
-	color: #ddd;
+	background-color: var(--background-color);
+	color: var(--color);
 	font-family: "JetBrains Mono", monospace;
 	font-size: 1.6rem;
 }
@@ -31,7 +38,45 @@ body {
 .container {
 	max-width: 85vw;
 	margin: 0 auto;
-	padding: 5vh 1.5rem;
+	padding: 8vh 1.5rem;
+	position: relative;
+}
+
+.theme-container {
+	position: absolute;
+	top: 10%;
+	right: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.theme-container span {
+	font-size: 1.8rem;
+}
+
+.theme-toggle {
+	width: 4rem;
+	height: 2rem;
+	background-color: var(--color);
+	border-radius: 1000rem;
+	display: flex;
+	align-items: center;
+	padding: 0.1rem;
+	z-index: 99999999999;
+
+	transition: padding-left 0.5s;
+}
+
+.theme-toggle.right {
+	padding-left: 2.1rem;
+}
+
+.theme-toggle--inner {
+	background-color: var(--background-color);
+	border-radius: 50%;
+	width: 1.8rem;
+	height: 1.8rem;
 }
 
 .copy {
@@ -92,7 +137,7 @@ body {
 }
 
 .letter.correct {
-	color: #ddd;
+	color: var(--color);
 }
 
 .letter.wrong {
@@ -115,7 +160,7 @@ body {
 }
 
 .quotes-box {
-	color: #777;
+	color: #888;
 	height: 20rem;
 	overflow: hidden;
 	font-size: 2.4rem;
@@ -159,7 +204,7 @@ body {
 @keyframes blink {
 	from,
 	to {
-		color: #dddddd;
+		color: var(--color);
 	}
 	50% {
 		color: transparent;

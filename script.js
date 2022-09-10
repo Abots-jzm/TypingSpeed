@@ -146,7 +146,7 @@ function calculateFinalSpeed() {
 
 	[...input].forEach((v, i) => v === expected[i] && correct++);
 	const speed = ((correct / 5) * 2).toFixed(0);
-	let accuracy = ((correct / total) * 100).toFixed(0) || 0;
+	let accuracy = Math.floor(correct / total * 100) || 0;
 	if (isNaN(accuracy)) accuracy = 0;
 
 	displayScores(speed, accuracy);

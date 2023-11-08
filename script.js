@@ -1,6 +1,6 @@
 "use strict";
 
-const MINIMUM_NO_OF_WORDS = 110;
+const MINIMUM_NO_OF_WORDS = 10;
 const COPY_TEXT = "The typing speed of an average person is 38 WPM. Are you faster than your friends? Settle the debate in just 30 seconds!";
 const API_URL = "https://type.fit/api/quotes";
 const CURSOR_HTML = `<span class="cursor">|</span>`;
@@ -55,18 +55,16 @@ async function fetchQuotes() {
 }
 
 function setActiveQuotes(data) {
-	let noOfQuotes = data.length;
-	let noOfWords = 0;
-	while (noOfWords < MINIMUM_NO_OF_WORDS) {
-		const random = Math.floor(Math.random() * noOfQuotes) + 1;
-		const quote = data[random].text;
+	const shuffledData = [...data];
 
-		if (activeQuotes.includes(quote)) continue;
-
-		activeQuotes.push(quote);
-		noOfWords += quote.split(" ").length;
-		noOfQuotes--;
+	// Use the Fisher-Yates shuffle algorithm
+	for (let i = shuffledData.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[shuffledData[i], shuffledData[j]] = [shuffledData[j], shuffledData[i]];
 	}
+
+	activeQuotes = shuffledData.map((quote) => quote.text);
+
 	displayQuotes();
 }
 
